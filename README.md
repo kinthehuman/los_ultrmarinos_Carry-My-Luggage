@@ -2,6 +2,7 @@
 ## Índice
 - [Objetivo principal](#Objetivo-principal)
 - [Recorrido](#Recorrido)
+- [Mapa](#Mapa)
 - [Reglas y comentarios adicionales](#Reglas-y-comentarios-adicionales)
 - [Instrucciones del árbitro](#Instrucciones-del-árbitro)
 - [Instrucciones del CO](#Instrucciones-del-CO)
@@ -20,6 +21,10 @@ la maleta que este elija.
 5. El robot tendrá que seguir al arbitro por la arena, donde habrá obstáculos.
 6. El robot tendrá que seguir al arbitro por fuera de la arena hasta que este se lo indique.
 7. El robot tendrá que volver a la arena.
+
+## Mapa
+
+![image](https://user-images.githubusercontent.com/90789825/167892994-1f50b760-7dce-4261-bd97-8b6a32fdb1a3.png)
 
 ## Reglas y comentarios adicionales
 1. **Deus ex Machina:** Reducción de puntaje por solicitar asistencia humana.
