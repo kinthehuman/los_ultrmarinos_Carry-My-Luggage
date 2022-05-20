@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<root main_tree_to_execute="BehaviorTree">
+    <!-- ////////// -->
+    <BehaviorTree ID="BehaviorTree">
+        <KeepRunningUntilFailure>
+            <ForceSuccess>
+                <Sequence name="root_sequence">   
+               
+                   <Action ID="Navegar"/>
+                   <Action ID="Centrar"/>
+                   <Action ID="TextToSpeech"/>  
+                   <Action ID="MaletaDetector2"/>      
+                   <Action ID="Seguir"/>
+                   <Action ID="Navegar2"/> 
+
+                   <!-- //////////  
+                   <Action ID="Seguir"/>
+                   <Action ID="MaletaDetector"/>
+                   <Action ID="Navegar2"/> 
+                    --> 
+
+                </Sequence>
+            </ForceSuccess>
+        </KeepRunningUntilFailure>
+    </BehaviorTree>
+    <!-- ////////// -->
+    <TreeNodesModel>
+    <Action ID="TextToSpeech2"/>
+       <Action ID="Navegar"/>
+       <Action ID="Centrar"/>
+       <Action ID="TextToSpeech"/>
+       <Action ID="MaletaDetector"/>
+       <Action ID="MaletaDetector2"/>
+       <Action ID="TextToSpeech2"/>
+       <Action ID="Seguir"/>
+       <Action ID="Navegar2"/>
+     
+    </TreeNodesModel>
+    <!-- ////////// -->
+</root>
+
