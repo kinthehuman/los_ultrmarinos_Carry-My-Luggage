@@ -12,77 +12,71 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-/*#include <string>*/
+#include <string>
+
 #include "behavior_tree/TextToSpeech.h"
 #include "sound_play/SoundRequest.h"
 #include "std_msgs/String.h"
 #include "diagnostic_msgs/DiagnosticArray.h"
-/*#include "behaviortree_cpp_v3/behavior_tree.h"
-#include "behaviortree_cpp_v3/bt_factory.h"
-#include "ros/ros.h"*/
 
 namespace behavior_tree
 {
-
-
 TextToSpeech::TextToSpeech(const std::string& name,  const BT::NodeConfiguration & config)
 : BT::ActionNodeBase(name, config)
 {
   sub = nh.subscribe("/diagnostics", 10, &TextToSpeech::messageCallback, this);
-	ad = nh.advertise<sound_play::SoundRequest>("/robotsound",10);
-  charla = "Hello there , I see that you need help. Please point repeatedly (shaking your hand) the bag you want me to take" ;
-	
+  ad = nh.advertise<sound_play::SoundRequest>("/robotsound", 10);
+  charla = "Hello there. Please point repeatedly (shaking your hand) the bag you want me to take";
 }
 
-
 void TextToSpeech::messageCallback(const diagnostic_msgs::DiagnosticArray::ConstPtr& msg)
-{ 
-  //std::cout << msg->status[0].message << "\n" ;
-  feedback = msg->status[0].message ;
+{
+  // std::cout << msg->status[0].message << "\n" ;
+  feedback = msg->status[0].message;
 }
 
 void TextToSpeech::halt()
 {
-  
   // ROS_INFO("TextToSpeech halt");
 }
 
 BT::NodeStatus TextToSpeech::tick()
 {
-  if(ac < 20){
-      ac++;
-      //std::cout << "PUBLICANDO" << "\n" ;
-      if(ac < 3 ){
-			sound_play::SoundRequest habla ;
-			habla.sound = -3 ;
-			habla.command = 1 ;
-			habla.volume = 1 ;
-			habla.arg = charla ;
-			ad.publish(habla) ;
-      }
-      return BT::NodeStatus::RUNNING;
-	}
-
- 
-  if (feedback != "0 sounds playing") {
+  if (ac < 20)
+  {
+    ac++;
+    // std::cout << "PUBLICANDO" << "\n";
+    if (ac < 3 )
+    {
+      sound_play::SoundRequest habla;
+      habla.sound = -3;
+      habla.command = 1;
+      habla.volume = 1;
+      habla.arg = charla;
+      ad.publish(habla);
+    }
     return BT::NodeStatus::RUNNING;
   }
-  else {
-     if(!exito){
-      sound_play::SoundRequest habla ;
-			habla.sound = -1 ;
-			habla.command = 0 ;
-			habla.volume = 1 ;
-			habla.arg = charla ;
-			ad.publish(habla) ;
-      exito=true;
-     }
+  if (feedback != "0 sounds playing")
+  {
+    return BT::NodeStatus::RUNNING;
+  }
+  else
+  {
+    if (!exito)
+    {
+      sound_play::SoundRequest habla;
+      habla.sound = -1;
+      habla.command = 0;
+      habla.volume = 1;
+      habla.arg = charla;
+      ad.publish(habla);
+      exito = true;
+    }
     return BT::NodeStatus::SUCCESS;
   }
 }
-
 }  // namespace behavior_tree
-
 
 BT_REGISTER_NODES(factory)
 {

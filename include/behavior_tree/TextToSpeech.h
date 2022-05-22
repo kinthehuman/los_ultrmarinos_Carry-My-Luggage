@@ -16,45 +16,38 @@
 #define BEHAVIOR_TREE_TEXTTOSPEECH_H
 
 #include <string>
-#include "behaviortree_cpp_v3/behavior_tree.h"
-#include "behaviortree_cpp_v3/bt_factory.h"
-#include "robocup_home_education/MonologoDF.h"
+
 #include "ros/ros.h"
-#include "sound_play/SoundRequest.h"
 #include "std_msgs/String.h"
+#include "sound_play/SoundRequest.h"
+#include "behaviortree_cpp_v3/bt_factory.h"
+#include "behaviortree_cpp_v3/behavior_tree.h"
 #include "diagnostic_msgs/DiagnosticArray.h"
+#include "robocup_home_education/MonologoDF.h"
 
 namespace behavior_tree
 {
+class TextToSpeech : public BT::ActionNodeBase
+{
+  public:
+    explicit TextToSpeech(const std::string& name, const BT::NodeConfiguration& config);
+    void halt();
+    BT::NodeStatus tick();
+    static BT::PortsList providedPorts()
+    {
+      return {BT::OutputPort<std::string>("object")};
+    }
+    void messageCallback(const diagnostic_msgs::DiagnosticArray::ConstPtr& msg);
 
-  class TextToSpeech : public BT::ActionNodeBase
-  {
-    public:
-      explicit TextToSpeech(const std::string& name, const BT::NodeConfiguration& config);
+  private:
+    ros::NodeHandle nh;
+    ros::Subscriber sub;
+    ros::Publisher ad;
+    std::string charla;
+    std::string feedback;
 
-      void halt();
-
-      BT::NodeStatus tick();
-
-      static BT::PortsList providedPorts()
-      {
-        return { BT::OutputPort<std::string>("object")};
-      }
-      
-      void messageCallback(const diagnostic_msgs::DiagnosticArray::ConstPtr& msg);
-      
-    private:
-      ros::NodeHandle nh;
-      ros::Subscriber sub;
-      ros::Publisher ad;      
-      std::string charla ;
-      std::string feedback ;
-
-      int ac = 0;
-      bool exito = false ;
-      
-  };
-
+    int ac = 0;
+    bool exito = false;
+};
 }  // namespace behavior_tree
-
 #endif  // BEHAVIOR_TREE_TEXTTOSPEECH_H

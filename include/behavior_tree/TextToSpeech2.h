@@ -12,49 +12,45 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef BEHAVIOR_TREE_TEXTTOSPEECH_H
-#define BEHAVIOR_TREE_TEXTTOSPEECH_H
+#ifndef BEHAVIOR_TREE_TEXTTOSPEECH2_H
+#define BEHAVIOR_TREE_TEXTTOSPEECH2_H
 
 #include <string>
-#include "behaviortree_cpp_v3/behavior_tree.h"
-#include "behaviortree_cpp_v3/bt_factory.h"
-#include "robocup_home_education/MonologoDF.h"
+
 #include "ros/ros.h"
-#include "sound_play/SoundRequest.h"
 #include "std_msgs/String.h"
+#include "sound_play/SoundRequest.h"
+#include "behaviortree_cpp_v3/bt_factory.h"
+#include "behaviortree_cpp_v3/behavior_tree.h"
 #include "diagnostic_msgs/DiagnosticArray.h"
+#include "robocup_home_education/MonologoDF.h"
 
 namespace behavior_tree
 {
+class TextToSpeech2 : public BT::ActionNodeBase
+{
+  public:
+    explicit TextToSpeech2(const std::string& name, const BT::NodeConfiguration& config);
 
-  class TextToSpeech2 : public BT::ActionNodeBase
-  {
-    public:
-      explicit TextToSpeech2(const std::string& name, const BT::NodeConfiguration& config);
+    void halt();
 
-      void halt();
+    BT::NodeStatus tick();
 
-      BT::NodeStatus tick();
+    static BT::PortsList providedPorts()
+    {
+      return {BT::InputPort<std::string>("message")};
+    }
+    void messageCallback(const diagnostic_msgs::DiagnosticArray::ConstPtr& msg);
 
-      static BT::PortsList providedPorts()
-      {
-        return { BT::InputPort<std::string>("message")};
-      }
-      
-      void messageCallback(const diagnostic_msgs::DiagnosticArray::ConstPtr& msg);
-      
-    private:
-      ros::NodeHandle nh;
-      ros::Subscriber sub;
-      ros::Publisher ad;      
-      std::string charla ;
-      
-      std::string feedback ;
-      bool exito = false ;
-      int ac = 0;
-      
-  };
+  private:
+    ros::NodeHandle nh;
+    ros::Subscriber sub;
+    ros::Publisher ad;
+    std::string charla;
 
+    std::string feedback;
+    bool exito = false;
+    int ac = 0;
+};
 }  // namespace behavior_tree
-
-#endif  // BEHAVIOR_TREE_TEXTTOSPEECH_H
+#endif  // BEHAVIOR_TREE_TEXTTOSPEECH2_H

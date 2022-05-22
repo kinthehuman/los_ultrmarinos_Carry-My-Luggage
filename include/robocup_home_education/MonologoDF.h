@@ -1,5 +1,3 @@
-
-  
 // Copyright 2022 los ultramarinos
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -74,7 +72,6 @@ class MonologoDF: public DialogInterface
         // timer = nh_.createTimer(ros::Duration(6), &MonologoDF::timercallback, this, true);
         disableListen();
       }
-        
     }
     void rightIntentCB(dialogflow_ros_msgs::DialogflowResult result)
     {
@@ -135,7 +132,7 @@ class MonologoDF: public DialogInterface
       }
       std_msgs::String msg;
       msg.data = person;
-      //msg.object = object;
+      // msg.object = object;
       if (person != "")
       {
         disableListen();

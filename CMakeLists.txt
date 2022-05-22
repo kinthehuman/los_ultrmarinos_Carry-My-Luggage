@@ -12,14 +12,14 @@ find_package(catkin REQUIRED COMPONENTS
   sound_play
   actionlib
   actionlib_msgs
-  geometry_msgs 
-  message_generation 
-  cv_bridge 
+  geometry_msgs
+  message_generation
+  cv_bridge
   image_transport
   tf
   behaviortree_cpp_v3
   diagnostic_msgs
- 
+
 )
 
 ################################################
@@ -27,10 +27,9 @@ find_package(catkin REQUIRED COMPONENTS
 ################################################
 
 ## Generate messages in the 'msg' folder
-add_message_files(
-   FILES
-   Info.msg
- )
+# add_message_files(
+#    FILES
+# )
 
 ## Generate services in the 'srv' folder
 # add_service_files(
@@ -92,14 +91,14 @@ add_definitions(${PCL_DEFINITIONS})
 
 add_library(robocup_home_education_los_ultramarinos
 	src/robocup_home_education/DialogInterface.cpp
-  src/visual_behavior/PIDController.cpp
-  src/visual_behavior/Controlador.cpp
+  src/robocup_home_education/PIDController.cpp
+  src/robocup_home_education/Controlador.cpp
 )
 
 
 
 list(APPEND plugin_libs
-  
+
 )
 
 
@@ -129,15 +128,15 @@ target_link_libraries(robocup_home_education_los_ultramarinos ${catkin_LIBRARIES
 ## The recommended prefix ensures that target names across packages don't collide
 
 
-add_executable(ObservadorPersonas_rc src/ObservadorPersonas.cpp)
-add_executable(Coordinador_rc src/Coordinador.cpp)
-add_executable(ObservadorPelotasHSV_rc src/ObservadorPelotasHSV.cpp)
-add_executable( Control_rc src/Control.cpp ) 
-add_executable( Graficos_rc src/Graficos.cpp ) 
-add_executable( identificadorLado src/identificadorLado.cpp ) 
-add_executable( MoveDetector src/MoveDetector.cpp ) 
-add_executable( NavegarHastaPunto src/NavegarHastaPunto.cpp ) 
-add_executable( TextToSpeechNode src/TextToSpeechNode.cpp ) 
+add_executable(ObservadorPersonas_rc src/robocup_home_education/ObservadorPersonas.cpp)
+add_executable(Coordinador_rc src/robocup_home_education/Coordinador.cpp)
+add_executable(ObservadorPelotasHSV_rc src/robocup_home_education/ObservadorPelotasHSV.cpp)
+add_executable( Control_rc src/robocup_home_education/Control.cpp )
+add_executable( Graficos_rc src/robocup_home_education/Graficos.cpp )
+add_executable( identificadorLado src/robocup_home_education/identificadorLado.cpp )
+add_executable( MoveDetector src/robocup_home_education/MoveDetector.cpp )
+add_executable( NavegarHastaPunto src/robocup_home_education/NavegarHastaPunto.cpp )
+add_executable( TextToSpeechNode src/robocup_home_education/TextToSpeechNode.cpp )
 
 
 target_link_libraries( ObservadorPelotasHSV_rc
@@ -153,19 +152,19 @@ ${catkin_LIBRARIES}
 )
 
 
-target_link_libraries( Control_rc 
-${catkin_LIBRARIES} 
+target_link_libraries( Control_rc
+${catkin_LIBRARIES}
 ${PROJECT_NAME}
  )
 
 
-target_link_libraries( Graficos_rc 
-${catkin_LIBRARIES} 
+target_link_libraries( Graficos_rc
+${catkin_LIBRARIES}
 ${PROJECT_NAME}
  )
 
 target_link_libraries(  MoveDetector
-${catkin_LIBRARIES} 
+${catkin_LIBRARIES}
 ${PROJECT_NAME}
  )
 
@@ -204,7 +203,7 @@ ${PROJECT_NAME}
 
 
 #add_executable(Monologo_node src/Monologo_node.cpp)
-add_executable(Monologo_bt_node src/Main.cpp)
+add_executable(Monologo_bt_node src/Carry_My_Luggage_node.cpp)
 #add_dependencies(Monologo_node ${catkin_EXPORTED_TARGETS} )
 add_dependencies(Monologo_bt_node ${catkin_EXPORTED_TARGETS} )
 #target_link_libraries(Monologo_node ${catkin_LIBRARIES} robocup_home_education_los_ultramarinos)
@@ -228,7 +227,50 @@ foreach(bt_plugin ${plugin_libs})
   target_compile_definitions(${bt_plugin} PRIVATE BT_PLUGIN_EXPORT)
 endforeach()
 
+roslint_cpp(
+  src/Carry_My_Luggage_node.cpp
 
+  src/robocup_home_education/Control.cpp
+  src/robocup_home_education/Controlador.cpp
+  src/robocup_home_education/Coordinador.cpp
+  src/robocup_home_education/DialogInterface.cpp
+  src/robocup_home_education/Graficos.cpp
+  src/robocup_home_education/identificadorLado.cpp
+  src/robocup_home_education/MoveDetector.cpp
+  src/robocup_home_education/NavegarHastaPunto.cpp
+  src/robocup_home_education/ObservadorPelotasHSV.cpp
+  src/robocup_home_education/ObservadorPersonas.cpp
+  src/robocup_home_education/PIDController.cpp
+  src/robocup_home_education/TextToSpeechNode.cpp
+
+  src/behavior_tree_nodes/Centrar.cpp
+  src/behavior_tree_nodes/Esperar.cpp
+  src/behavior_tree_nodes/MaletaDetector.cpp
+  src/behavior_tree_nodes/MaletaDetector2.cpp
+  src/behavior_tree_nodes/Navegar.cpp
+  src/behavior_tree_nodes/Navegar2.cpp
+  src/behavior_tree_nodes/Navegar4.cpp
+  src/behavior_tree_nodes/Seguir.cpp
+  src/behavior_tree_nodes/TextToSpeech.cpp
+  src/behavior_tree_nodes/TextToSpeech2.cpp
+
+  include/behavior_tree/Centrar.h
+  include/behavior_tree/Esperar.h
+  include/behavior_tree/MaletaDetector.h
+  include/behavior_tree/MaletaDetector2.h
+  include/behavior_tree/Navegar.h
+  include/behavior_tree/Navegar2.h
+  include/behavior_tree/Navegar4.h
+  include/behavior_tree/Seguir.h
+  include/behavior_tree/TextToSpeech.h
+  include/behavior_tree/TextToSpeech2.h
+
+  include/robocup_home_education/Controlador.h
+  include/robocup_home_education/DialogInterface.h
+  include/robocup_home_education/MonologoDF.h
+  include/robocup_home_education/PIDController.h
+
+)
 #############
 ## Install ##
 #############

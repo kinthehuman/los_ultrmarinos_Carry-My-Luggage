@@ -1,4 +1,4 @@
-// Copyright 2019 Intelligent Robotics Lab
+// Copyright 2022 los ultramarinos
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -23,62 +23,52 @@
 
 namespace behavior_trees
 {
-
-Seguir::Seguir(const std::string& name , const BT::NodeConfiguration & config): BT::ActionNodeBase(name, config),nh_(),feedBack(" ")
-{   
-  activador = nh_.advertise<std_msgs::Bool>("/control_seguimiento",10);
-  sub = nh_.subscribe<std_msgs::String>("/status_seguimiento", 10, &Seguir::messageCallback, this); 
-}
-
-
-void
-Seguir::messageCallback(const std_msgs::String::ConstPtr& msg)
+Seguir::Seguir(const std::string& name , const BT::NodeConfiguration & config):
+BT::ActionNodeBase(name, config), nh_(), feedBack(" ")
 {
-  feedBack = msg->data ;
-  //std::cout << msg->data  ;
+  activador = nh_.advertise<std_msgs::Bool>("/control_seguimiento", 10);
+  sub = nh_.subscribe<std_msgs::String>("/status_seguimiento", 10, &Seguir::messageCallback, this);
 }
 
+void Seguir::messageCallback(const std_msgs::String::ConstPtr& msg)
+{
+  feedBack = msg->data;
+  // std::cout << msg->data;
+}
 
-void
-Seguir::halt()
+void Seguir::halt()
 {
   ROS_INFO("Seguir halt");
 }
 
-BT::NodeStatus
-Seguir::tick()
+BT::NodeStatus Seguir::tick()
 {
- 
-  if(a < 10){
-  //ROS_INFO("Centrar RUNNING Esperansdo");
-  std_msgs::Bool act ;
-  act.data = true ;
-  activador.publish(act);
-  a++ ;
-  return BT::NodeStatus::RUNNING;
+  if ( a < 10)
+  {
+    // ROS_INFO("Centrar RUNNING Esperansdo");
+    std_msgs::Bool act;
+    act.data = true;
+    activador.publish(act);
+    a++;
+    return BT::NodeStatus::RUNNING;
   }
-  
-  if (feedBack == "RUNNING") {
-       
-         return BT::NodeStatus::RUNNING;
-  } 
-
-  if (feedBack == "SUCCESS") {
-    if(!exito){
-      std_msgs::Bool act ;
-     act.data = false ;
-     activador.publish(act);
+  if (feedBack == "RUNNING")
+  {
+    return BT::NodeStatus::RUNNING;
+  }
+  if (feedBack == "SUCCESS")
+  {
+    if (!exito)
+    {
+      std_msgs::Bool act;
+      act.data = false;
+      activador.publish(act);
     }
     return BT::NodeStatus::SUCCESS;
   }
-    
-  
-
   return BT::NodeStatus::RUNNING;
 }
-
 }  // namespace behavior_trees
-
 
 BT_REGISTER_NODES(factory)
 {

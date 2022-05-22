@@ -1,3 +1,17 @@
+// Copyright 2022 los ultramarinos
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 #include <string>
 #include "behavior_tree/Navegar2.h"
 #include "geometry_msgs/Twist.h"
@@ -13,37 +27,33 @@
 namespace behavior_trees
 {
 
-Navegar2::Navegar2(const std::string& name , const BT::NodeConfiguration & config): BT::ActionNodeBase(name, config),nh_(),feedBack(-100)
-{ 
-  int fr = 10 ;
-  activador = nh_.advertise<geometry_msgs::PoseStamped>("/navigate_to",fr);
+Navegar2::Navegar2(const std::string& name , const BT::NodeConfiguration & config):
+BT::ActionNodeBase(name, config), nh_(), feedBack(-100)
+{
+  int fr = 10;
+  activador = nh_.advertise<geometry_msgs::PoseStamped>("/navigate_to", fr);
   sub = nh_.subscribe("/resultado_navegacion", fr, &Navegar2::messageCallback, this);
 }
 
-void
-Navegar2::messageCallback(const std_msgs::Int64::ConstPtr& msg_)
+void Navegar2::messageCallback(const std_msgs::Int64::ConstPtr& msg_)
 {
-  feedBack = msg_->data ;
+  feedBack = msg_->data;
 }
 
-void
-Navegar2::halt()
+void Navegar2::halt()
 {
   ROS_INFO("Seguir halt");
 }
 
-BT::NodeStatus
-Navegar2::tick()
+BT::NodeStatus Navegar2::tick()
 {
-
-  if (ac == 5) 
+  if (ac == 5)
   {
-
-    ROS_INFO(" VUELTA AL ORIGEN ACTIVADA ");
+    ROS_INFO(" VUELTA AL ORIGEN ACTIVADA");
 
     geometry_msgs::PoseStamped msg;
-    
-    // donde estara el arbitro 
+
+    // donde estara el arbitro
     msg.header.stamp = i;
     msg.header.frame_id = "map";
 
@@ -59,28 +69,23 @@ Navegar2::tick()
     activador.publish(msg);
   }
   ac++;
-  std::cout << "Feedback : " <<  feedBack ;
-  
-  if(feedBack == 1 )
+  std::cout << "Feedback : " <<  feedBack;
+
+  if (feedBack == 1 )
   {
-      
-    ROS_INFO(" ORIGEN ALCANSADO ");
+    ROS_INFO(" ORIGEN ALCANSADO");
     return BT::NodeStatus::SUCCESS;
-
-  }else if(feedBack == -1 ) 
+  }
+  else if (feedBack == -1 )
   {
-
     ROS_INFO(" FALLO EN LA NAVEGACION ");
     return BT::NodeStatus::FAILURE;
   }
-    
+
   ROS_INFO(" LLEGANDO AL ORIGEN ");
   return BT::NodeStatus::RUNNING;
- 
 }
-
 }  // namespace behavior_trees
-
 
 BT_REGISTER_NODES(factory)
 {
