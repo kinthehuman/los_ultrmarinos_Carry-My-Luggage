@@ -86,5 +86,5 @@ BT::NodeStatus Navegar2::tick()
 
 BT_REGISTER_NODES(factory)
 {
-  factory.registerNodeType<behavior_trees::Navegar4>("Navegar4");
+  factory.registerNodeType<behavior_trees::Navegar2>("Navegar2");
 }
